@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  CURSEFORGE_PROJECT_ID: "1654224"
+
+jobs:
+  release:
+    name: Package and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tag with full history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check the tag against the TOC version
+        run: |
+          toc=$(sed -n 's/^## Version:[[:space:]]*//p' Markr/Markr.toc | tr -d '\r')
+          if [ "$toc" != "${GITHUB_REF_NAME#v}" ]; then
+            echo "::error::Markr.toc says $toc but the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
+
+      - name: Package, upload to CurseForge, create the GitHub release
+        uses: BigWigsMods/packager@v2
+        with:
+          pandoc: false
+          args: -p ${{ env.CURSEFORGE_PROJECT_ID }}
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}

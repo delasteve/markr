@@ -1,0 +1,9 @@
+package-as: Markr
+
+ignore:
+  - README.md
+  - wordmark.png
+  - wordmark-on-light.png
+
+move-folders:
+  Markr/Markr: Markr

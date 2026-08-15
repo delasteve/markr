@@ -3,6 +3,9 @@ temp
 .tmp
 tmp
 
+# Packager output
+.release/
+
 # IDE - VSCode
 .vscode
 
