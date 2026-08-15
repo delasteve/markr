@@ -30,6 +30,33 @@ jobs:
             exit 1
           fi
 
+      - name: Build the changelog from feat and fix commits
+        run: |
+          set -euo pipefail
+          range=$(git describe --tags --abbrev=0 "$GITHUB_REF_NAME^" 2>/dev/null | sed 's/$/../' || true)
+
+          section() {
+            local body
+            body=$(git log --no-merges --pretty=format:%s "$range$GITHUB_REF_NAME" \
+              | sed -n "s/^$1\(([^)]*)\)\?!\?: //p" | sed 's/^./\U&/')
+            [ -z "$body" ] && return 0
+            printf '## %s\n\n' "$2"
+            echo "$body" | sed 's/^/- /'
+            printf '\n'
+          }
+
+          {
+            printf '# %s\n\n' "$GITHUB_REF_NAME"
+            section feat Added
+            section fix Fixed
+          } > CHANGELOG.md
+
+          if [ "$(wc -l < CHANGELOG.md)" -le 2 ]; then
+            printf 'No player-facing changes.\n' >> CHANGELOG.md
+          fi
+
+          cat CHANGELOG.md
+
       - name: Package, upload to CurseForge and Wago, create the GitHub release
         uses: BigWigsMods/packager@v2
         with:

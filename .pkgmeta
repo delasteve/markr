@@ -7,3 +7,7 @@ ignore:
 
 move-folders:
   Markr/Markr: Markr
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown

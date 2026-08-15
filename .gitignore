@@ -5,6 +5,7 @@ tmp
 
 # Packager output
 .release/
+CHANGELOG.md
 
 # IDE - VSCode
 .vscode
