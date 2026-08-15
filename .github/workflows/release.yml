@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 permissions:
   contents: write
@@ -25,7 +25,7 @@ jobs:
       - name: Check the tag against the TOC version
         run: |
           toc=$(sed -n 's/^## Version:[[:space:]]*//p' Markr/Markr.toc | tr -d '\r')
-          if [ "$toc" != "${GITHUB_REF_NAME#v}" ]; then
+          if [ "$toc" != "$GITHUB_REF_NAME" ]; then
             echo "::error::Markr.toc says $toc but the tag is $GITHUB_REF_NAME"
             exit 1
           fi
