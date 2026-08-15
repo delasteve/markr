@@ -1,0 +1,15 @@
+# temporary folders
+temp
+.tmp
+tmp
+
+# IDE - VSCode
+.vscode
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/
+CLAUDE.md
